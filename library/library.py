@@ -1,3 +1,17 @@
+import psycopg2
+
+# Connect to existing database
+conn = psycopg2.connect(
+    database="exampledb",
+    user="docker",
+    password="docker",
+    host="0.0.0.0"
+)
+
+# Open cursor to perform database operation
+cur = conn.cursor()
+
+
 class Book:
     genre: str
     title: str
@@ -14,7 +28,7 @@ class Reader:
     gender: str
     email: str
 
-    def __init__(self, name: str, gender: str, email):
+    def __init__(self, name: str, gender: str, email: str,):
         self.name = name
         self.gender = gender
         self.email = email
@@ -65,3 +79,7 @@ class Library:
 
     def write_on_reader(self, reader):
         self.readers.append(reader)
+
+# Close communications with database
+cur.close()
+conn.close()

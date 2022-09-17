@@ -19,11 +19,6 @@ def get_routes(library_resource: LibraryResource) -> [dict]:
         },
         {
             'method': 'POST',
-            'path': '/v1/Library/add-user',
-            'call': library_resource.auth_reg
-        },
-        {
-            'method': 'POST',
             'path': '/v1/Library/books',
             'call': library_resource.add_book
         },

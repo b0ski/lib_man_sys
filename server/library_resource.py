@@ -6,8 +6,18 @@ from tkinter import *
 from tkinter import messagebox
 import pickle
 
+import psycopg2
+
 
 from library.library import Library, Book
+
+# Connect to existing database
+conn = psycopg2.connect(
+    database="exampledb",
+    user="docker",
+    password="docker",
+    host="0.0.0.0"
+)
 
 
 class LibraryResource:
@@ -17,6 +27,10 @@ class LibraryResource:
         self._library = library
 
     def add_book(self, req: BaseHTTPRequestHandler):
+
+        # Open cursor to perform database operation
+        cur = conn.cursor()
+
         self._library.add_book(Book("Harry Potter", "Fantasy", "J.K. Rowling"))
 
         req.send_response(HTTPStatus.OK)
@@ -25,6 +39,14 @@ class LibraryResource:
         req.wfile.write(
             json.dumps({'server_name': 'Simple HTTP server', 'author': 'Andrey Varenyk', 'path': req.path,
                         'method': req.command, 'Library books': self._library.books.__str__()}).encode())
+        print(req.path)
+
+        # Update database with query
+        cur.execute(f"INSERT INTO users (name, gender, email) VALUES ('req', 'm', 'traint@gmail.com')")
+
+        # Close communications with database
+        cur.close()
+        conn.close()
 
     def auth_reg(self, req: BaseHTTPRequestHandler):
         root = Tk()
