@@ -13,10 +13,10 @@ conn = psycopg2.connect(
 cur = conn.cursor()
 
 # Insert data
-cur.execute("INSERT INTO users (name, gender, email) VALUES ('Trevor', 'm', 'traint@gmail.com')")
+# cur.execute("INSERT INTO book (title, genre, rating) VALUES ('Fight Club', 'Thriller', 5)")
 
 # Query the database
-cur.execute("SELECT * FROM users")
+cur.execute("SELECT * FROM book")
 rows = cur.fetchall()
 
 if not len(rows):

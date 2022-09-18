@@ -28,9 +28,6 @@ class LibraryResource:
 
     def add_book(self, req: BaseHTTPRequestHandler):
 
-        # Open cursor to perform database operation
-        cur = conn.cursor()
-
         self._library.add_book(Book("Harry Potter", "Fantasy", "J.K. Rowling"))
 
         req.send_response(HTTPStatus.OK)
@@ -39,10 +36,25 @@ class LibraryResource:
         req.wfile.write(
             json.dumps({'server_name': 'Simple HTTP server', 'author': 'Andrey Varenyk', 'path': req.path,
                         'method': req.command, 'Library books': self._library.books.__str__()}).encode())
-        print(req.path)
 
-        # Update database with query
-        cur.execute(f"INSERT INTO users (name, gender, email) VALUES ('req', 'm', 'traint@gmail.com')")
+    def add(self, req: BaseHTTPRequestHandler):
+        # Open cursor to perform database operation
+        cur = conn.cursor()
+
+        content_len = int(req.headers.get('Content-Length'))
+        post_body = req.rfile.read(content_len).decode()
+        dict_obj = json.loads(post_body)
+
+        print(dict_obj['title'], dict_obj['genre'], dict_obj['rating'])
+
+        cur.execute(f"INSERT INTO book (title, genre, rating) VALUES ({dict_obj['title']},"
+                    f" {dict_obj['genre']}, {dict_obj['rating']})")
+
+        req.send_response(HTTPStatus.OK)
+        req.send_header("Content-type", "application/json")
+        req.end_headers()
+        req.wfile.write(
+            json.dumps({'book_add': 'Book'}).encode())
 
         # Close communications with database
         cur.close()

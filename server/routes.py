@@ -22,6 +22,11 @@ def get_routes(library_resource: LibraryResource) -> [dict]:
             'path': '/v1/Library/books',
             'call': library_resource.add_book
         },
+        {
+            'method': 'POST',
+            'path': '/v1/Library/add',
+            'call': library_resource.add
+        },
     ]
     return routes
 
